@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <style>
+    .site-dir li {
+        line-height: 26px;
+        margin-left: 20px;
+        overflow: visible;
+        list-style-type: disc;
+    }
+    .layui-layer {
+      box-shadow: none !important;
+      border: 1px solid #d2d2d2;
+    }
+    </style>
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='datatable'>基本数据表格hg.table.datatable属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo1" lay-filter="demo1"></table>
+                <p>基本数据表格使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+var tableCols = []; //cols表头参数请查看官方文档：https://www.layui.com/doc/modules/table.html#cols
+var toolbar = [{
+    text: '添加',
+    layuiicon: '&#xe608;',
+    handler: function () {
+      hg.open('添加用户', './DataGrid-add.html', 600, 400);
+    }
+  },
+  {
+    text: '修改',
+    layuiicon: '&#xe642;',
+    handler: function (obj, row) {
+      if (row) {
+        hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
+      } else {
+        hg.msg('请选中一行数据，再操作！');
+      }
+    }
+  }, {
+    text: '删除',
+    layuiicon: '&#xe640;',
+    handler: function (obj, row) {
+      if (row) {
+        hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
+          row.del(); //只删本地数据
+          hg.msg('删除成功！');
+          //obj.reload();
+        });
+      } else {
+        hg.msg('请选中一行数据，再操作！');
+      }
+    }
+  }
+];
+//初始化
+var table = hg.table.datatable('test', '用户管理', 'data1.json', {}, tableCols, toolbar, true, 'full-190', ['filter', 'print', 'exports']);
+
+//导出所有数据
+var table = hg.table.datatable('test', '用户管理', 'data1.json', {}, tableCols, toolbar, true, 'full-190', ['filter','printall','exportsall']);
+
+//获取选中行
+var row = hg.table.datatable('test', 'getSelected');
+var row = table.getSelected();
+
+//重载表格
+hg.table.datatable('test', 'reload');
+或 table.reload(where); //where为url附加参数
+
+//重置表格大小
+hg.table.datatable('test', 'resize');
+或 table.resize();
+
+//打印任意数据
+hg.table.printall(tableCols, data.rows);
+hg.table.printall(layid); //打印当页数据
+
+//导出任意数据
+hg.table.exportfile(layid, data.rows);
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='datatree'>树形组件hg.tree.datatree属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo2" lay-filter="demo2"></table>
+                <table class="layui-hide" id="demo2_1" lay-filter="demo2_1"></table>
+                <p>树形组件使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//初始化
+var tree;
+hg.request('tree.json', function (data) {
+  if (data || data.count > 0) {
+    tree = hg.tree.datatree('treeid', data.data, true);
+    tree.onspread = function() {
+      var obj = this; 
+      //模拟post后台数据，延迟0.5秒
+      setTimeout(() => {
+        hg.request('tree.json',function(data) {
+          if (data || data.count > 0){
+            obj.lazytree(data.data);
+          }
+        });
+      }, 500);
+    }
+    tree.onclick = function() {
+      var obj = this; 
+      console.log(obj.data); //得到当前点击的节点数据
+      console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+      console.log(obj.elem); //得到当前节点元素
+      console.log(obj.data.children); //当前节点下是否有子节点
+    }
+    tree.oncheck = function() {
+      var obj = this; 
+      console.log(obj.data); //得到当前点击的节点数据
+      console.log(obj.checked); //得到当前节点的展开状态：open、close、normal
+      console.log(obj.elem); //得到当前节点元素
+    }
+  }
+});
+//获得选中的节点 
+function getChecked(){
+  var checkData = tree.getChecked();
+  hg.msg(JSON.stringify(checkData));
+}
+//设置节点勾选
+function setChecked(){
+  tree.setChecked(['hg-100101101','hg-100101102']);
+}
+//实例重载
+function reload(){
+  tree.reload();
+  hg.msg('重载成功！')
+}
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='datetime'>基本日期框hg.datetime属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo3" lay-filter="demo3"></table>
+                <p>基本日期框使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+&lt;input class=&quot;layui-input&quot; autocomplete=&quot;off&quot; placeholder=&quot;开始日&quot; name=&quot;start&quot; id=&quot;start&quot;&gt;
+&lt;input class=&quot;layui-input&quot; autocomplete=&quot;off&quot; placeholder=&quot;截止日&quot; name=&quot;end&quot; id=&quot;end&quot;&gt;
+//基本日期控件
+hg.datetime('#start', '#end', {
+    type: 'datetime',
+    value: hg.getdate('datetime', -30),
+    value2: hg.getdate('datetime', '23:59:59'),
+    min: hg.getdate('date', -365),
+    max: hg.getdate(),
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='datetime2'>组合日期框hg.datetime2属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo4" lay-filter="demo4"></table>
+                <p>组合日期框使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+&lt;input class=&quot;layui-input&quot; autocomplete=&quot;off&quot; placeholder=&quot;时间段&quot; name=&quot;time&quot; id=&quot;time&quot;&gt;
+//组合日期控件
+hg.datetime2('#time','datetime',hg.getdate('date', -30),hg.getdate());
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='getdate'>获取日期时间hg.getdate属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo5" lay-filter="demo5"></table>
+                <p>获取日期时间使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//获取过去30天前日期
+hg.getdate('date', -30);
+//获取当前日期
+hg.getdate();
+//获取当前时间
+hg.getdate('datetime');
+//获取当天结束时间
+hg.getdate('datetime', '23:59:59');
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='request'>网络请求hg.request属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo6" lay-filter="demo6"></table>
+                <p>网络请求使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//异步获取后台接口数据
+hg.request('api/userinfo',{"id":"value"},'POST', function (data) {
+  if (data) {
+    //返回数据
+  }
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='ontab'>监听Tab切换事件hg.ontab属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo7" lay-filter="demo7"></table>
+                <p>监听Tab切换事件使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//监听Tab切换事件
+hg.ontab('tab-card',function(){
+  var id = this.getAttribute('lay-id');
+  if (id === 'card1') {
+    //触发tab1
+  }
+  if (id === 'card2') {
+    //触发tab2
+  }
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='onsubmit'>监听表单提交事件hg.form.onsubmit属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo8" lay-filter="demo8"></table>
+                <p>监听表单提交事件使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//监听表单提交事件
+hg.form.onsubmit('sreach', function (data) {
+  var start = data.start;
+  var end = data.end;
+  if (start && end) {
+      if (start > end) {
+          hg.msg("时间范围错误，请重新选择!");
+          return false;
+      }
+  } else if (start || end) {
+      hg.msg("时间范围错误，请重新选择!");
+      return false;
+  }
+  hg.msg(JSON.stringify(data));
+  table && table.reload();
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='onswitch'>监听switch操作事件hg.form.onswitch属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo9" lay-filter="demo9"></table>
+                <p>监听switch操作事件使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//监听switch操作事件
+hg.form.onswitch('doflag',function(data){
+  hg.msg(data.elem.name+'开关checked：'+(data.elem.checked===true?'开启':'禁用'));
+  console.log(data.elem.checked);
+  console.log(data.elem.name);
+  console.log(data.elem.value);
+  console.log(data.othis);
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='verify'>表单自定义验证规则hg.form.verify属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo10" lay-filter="demo10"></table>
+                <p>表单自定义验证规则使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//表单自定义验证规则
+hg.form.verify({
+  title: function(value){
+    if(value.length < 5){
+      return '标题至少得5个字符啊';
+    }
+  }
+  ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+  ,content: function(value){
+    layedit.sync(editIndex);
+  }
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='open'>打开弹出层hg.open属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo11" lay-filter="demo11"></table>
+                <p>打开弹出层使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//弹出最大化
+hg.open('最大化','http://www.baidu.com','','',true);
+//弹出自动宽高
+hg.open('弹出自动宽高','http://www.baidu.com');
+//弹出指定宽高
+hg.open('弹出指定宽高','http://www.baidu.com',500,300);
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='tab'>添加tabs页hg.add_tab属性说明</a></legend></fieldset>
+                <p>添加tabs页使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//添加tabs页
+hg.add_tab('在tab打开','member-list.html');
+//添加tabs页并刷新页面
+hg.add_tab('在tab打开刷新','member-del.html',true);
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='close'>关闭弹出层hg.close属性说明</a></legend></fieldset>
+                <p>关闭弹出层使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//关闭弹出层
+hg.close();
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='base_reload'>刷新父窗口hg.base_reload属性说明</a></legend></fieldset>
+                <p>刷新父窗口使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//刷新父窗口
+hg.base_reload();
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='NProgress'>请求进度条hg.NProgress属性说明</a></legend></fieldset>
+                <p>请求进度条使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//请求进度条，id为iframe中tab-id
+hg.NProgress(id);
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='msg'>弹出提示框hg.msg属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo12" lay-filter="demo12"></table>
+                <p>弹出提示框使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//弹出提示框
+hg.msg('添加成功！');
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='msghide'>弹出半透明提示层hg.msghide属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo13" lay-filter="demo13"></table>
+                <p>弹出半透明提示层使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//弹出半透明提示层
+hg.msghide('上传成功！');
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='confirm'>弹出询问框hg.confirm属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo14" lay-filter="demo14"></table>
+                <p>弹出询问框使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//弹出询问框
+hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
+  hg.msg('删除成功！');
+});
+                </pre>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend><a name='load'>弹出加载层hg.load属性说明</a></legend></fieldset>
+                <table class="layui-hide" id="demo15" lay-filter="demo15"></table>
+                <p>弹出加载层使用实例：</p>
+                <pre class="layui-code" lay-title="JavaScript">
+//弹出加载层
+var a = hg.load(function(){
+  var that = this;
+  setTimeout(function(){
+      //that.close(); //关闭加载层
+      a.close();
+      hg.msghide('清除服务器缓存成功.');
+  },2000);
+});
+                </pre>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var cols1 = [[
+        { field: 'id', width: 120, title: '参数'}, 
+        { field: 'type', width: 120, title: '类型'}, 
+        { field: 'note', title: '说明'}]
+    ];
+    var cols2 = [[
+        { field: 'id', width: 160, title: '事件名称'}, 
+        { field: 'note', title: '说明'}]
+    ];
+    var data1 = [
+        {"id": "layid", "type": "String", "note": "渲染ID 必填项，指定原始 table 容器的选择器，id和lay-filter要一致。"}, 
+        {"id": "title", "type": "String", "note": "标题，定义 table 的大标题（在文件导出等地方会用到）。"},
+        {"id": "url", "type": "String", "note": "请求异步数据接口的API地址。"},
+        {"id": "where", "type": "Object", "note": "请求异步数据接口的条件参数。"},
+        {"id": "cols", "type": "Array", "note": "设置表头。值是一个二维数组。方法渲染方式必填"},
+        {"id": "toolbar", "type": "Object/Boolean", "note": "开启表格头部工具栏区域，toolbar: true 仅开启工具栏，不显示左侧按钮"},
+        {"id": "page", "type": "Boolean", "note": "启用分页"},
+        {"id": "height", "type": "Boolean", "note": "设定容器高度，可设置全屏高度，‘full-200’，-200根据实际高度设定"},
+        {"id": "defaultToolbar", "type": "Object", "note": "工具栏显示按钮 ['filter','print','exports','printall','exportsall']"},
+        {"id": "totalRow", "type": "Boolean", "note": "启用合计"}
+    ];
+    hg.table.datatable('demo1', '数据表格文档', data1, {}, cols1);
+    var data2 = [
+        {"id": "layid", "type": "String", "note": "渲染ID 必填项，指定原始 tree 容器的选择器，id和lay-filter要一致。"}, 
+        {"id": "data", "type": "Array", "note": "数据源，渲染前向后台获取加载数据"},
+        {"id": "showCheckbox", "type": "Boolean", "note": "是否显示复选框，默认false"},
+        {"id": "showLine", "type": "Boolean", "note": "是否开启连接线。默认 true，若设为 false，则节点左侧出现三角图标。"},
+        {"id": "accordion", "type": "Boolean", "note": "是否开启手风琴模式，默认 false"},
+        {"id": "onlyIconControl", "type": "Boolean", "note": "是否仅允许节点左侧图标控制展开收缩。默认 false"},
+        {"id": "isJump", "type": "Boolean", "note": "是否允许点击节点时弹出新窗口跳转。默认 false"}
+    ];
+    hg.table.datatable('demo2', '树形组件文档', data2, {}, cols1);
+    var data2_1 = [
+        {"id": "click", "note": "在节点被点击后触发，obj.data当前节点数据，obj.state当前节点的展开状态：open、close、normal，obj.elem当前节点元素。"}, 
+        {"id": "oncheck", "note": "点击复选框时触发，obj.data当前节点数据，obj.checked当前节点的展开状态：open、close、normal，obj.elem当前节点元素。"},
+        {"id": "spread", "note": "父节点展开时触发，配合data参数lazy: true 开启子节点懒加载方式时有效，var obj = this; obj.lazytree(data)懒加载渲染。"}
+    ];
+    hg.table.datatable('demo2_1', '树形组件文档', data2_1, {}, cols2);
+    var data3 = [
+        {"id": "btime", "type": "String", "note": "开始日期元素，必选项，指定input元素id"}, 
+        {"id": "etime", "type": "String", "note": "结束日期元素，非时间段可传值null"},
+        {"id": "options", "type": "Object", "note": "初始化属性，可选项"},
+        {"id": "type", "type": "String", "note": "options参数，选择类型，默认date，其他类型：datetime、time、year、month 或 dt、t、y、m表示"},
+        {"id": "value", "type": "String", "note": "options参数，开始日期默认值"},
+        {"id": "value2", "type": "String", "note": "options参数，结束日期默认值"},
+        {"id": "min", "type": "String", "note": "options参数，开始日期最小范围时间值"},
+        {"id": "min2", "type": "String", "note": "options参数，结束日期最小范围时间值"},
+        {"id": "max", "type": "String", "note": "options参数，开始日期最大范围时间值"},
+        {"id": "max2", "type": "String", "note": "options参数，结束日期最大范围时间值"}
+    ];
+    hg.table.datatable('demo3', '基本日期框文档', data3, {}, cols1);
+    var data4 = [
+        {"id": "elem", "type": "String", "note": "渲染元素ID，必选项，指定input元素id"}, 
+        {"id": "type", "type": "String", "note": "选择类型，默认date，其他类型：datetime、time、year、month 或 dt、t、y、m表示"},
+        {"id": "min", "type": "String", "note": "开始日期最小范围时间值"},
+        {"id": "max", "type": "String", "note": "结束日期最大范围时间值"}
+    ];
+    hg.table.datatable('demo4', '组合日期框文档', data4, {}, cols1);
+    var data5 = [
+        {"id": "type", "type": "String", "note": "获取日期类型，默认date，带有时间日期datetime或 dt表示"},
+        {"id": "e", "type": "Number/String", "note": "特定返回值，-7表示过去7天日期，1或‘01’表示本月1号，2或‘23:59:59’表示当日结束时间"}
+    ];
+    hg.table.datatable('demo5', '获取日期时间文档', data5, {}, cols1);
+    var data6 = [
+        {"id": "url", "type": "String", "note": "请求后台地址，必选项。"},
+        {"id": "data", "type": "Object", "note": "请求附加参数，可选项，默认为空，可传对象{'id':'value'}"},
+        {"id": "type", "type": "String", "note": "请求方式，可选项，默认'GET'"},
+        {"id": "contentType", "type": "String", "note": "上传数据类型，可选项，默认'application/json;charset=utf-8'"},
+        {"id": "dataType", "type": "String", "note": "返回数据类型，可选项，默认'json'"},
+        {"id": "async", "type": "String", "note": "异步请求，可选项，默认true"},
+        {"id": "funSuccess", "type": "function", "note": "请求成功后的回调函数，必选项。"},
+    ];
+    hg.table.datatable('demo6', '获取日期时间文档', data6, {}, cols1);
+    var data7 = [
+        {"id": "layfilter", "type": "String", "note": "过滤器id，必选项。"},
+        {"id": "_callback", "type": "function", "note": "回调方法。"}
+    ];
+    hg.table.datatable('demo7', '监听Tab切换事件文档', data7, {}, cols1);
+    hg.table.datatable('demo8', '监听表单提交事件文档', data7, {}, cols1);
+    hg.table.datatable('demo9', '监听switch操作事件文档', data7, {}, cols1);
+    var data10 = [
+        {"id": "options", "type": "Object", "note": "规则对象，必选项。"}
+    ];
+    hg.table.datatable('demo10', '表单自定义验证规则文档', data10, {}, cols1);
+    var data11 = [
+        {"id": "title", "type": "String", "note": "弹出层标题，必选项。"},
+        {"id": "url", "type": "String", "note": "弹出层地址，必选项。"},
+        {"id": "w", "type": "Number", "note": "指定宽，可选项。"},
+        {"id": "h", "type": "Number", "note": "指定高，可选项。"},
+        {"id": "full", "type": "Boolean", "note": "是否全屏，可选项，默认false。"}
+    ];
+    hg.table.datatable('demo11', '打开弹出层文档', data11, {}, cols1);
+    var data12 = [
+        {"id": "content", "type": "String", "note": "提示框内容，必选项。"},
+        {"id": "title", "type": "String", "note": "提示框标题，可选项。"},
+        {"id": "time", "type": "Number", "note": "自动关闭所需时间，可选项，默认值0，5000表示5秒后自动关闭。"}
+    ];
+    hg.table.datatable('demo12', '弹出提示框文档', data12, {}, cols1);
+    var data13 = [
+        {"id": "content", "type": "String", "note": "提示框内容，必选项。"},
+        {"id": "time", "type": "Number", "note": "自动关闭所需时间，可选项，默认值2000，5000表示5秒后自动关闭。"}
+    ];
+    hg.table.datatable('demo13', '弹出半透明提示层文档', data13, {}, cols1);
+    var data14 = [
+        {"id": "content", "type": "String", "note": "提示框内容，必选项。"},
+        {"id": "title", "type": "String", "note": "提示框标题，可选项。"},
+        {"id": "callbackmething", "type": "function", "note": "执行回调函数，必选项。"}
+    ];
+    hg.table.datatable('demo14', '弹出询问框文档', data14, {}, cols1);
+    var data15 = [
+        {"id": "callbackmething", "type": "function", "note": "执行回调函数，必选项。"},
+        {"id": "return", "type": "Array", "note": "返回对象，执行close()方法，关闭加载层，或this.close()关闭加载层。"}
+    ];
+    hg.table.datatable('demo15', '弹出加载层文档', data15, {}, cols1);
+
+    layui.use('element', function () {
+      layer.open({
+        type: 1,
+        title: '目录',
+        area: ['200px', '540px'], //宽高
+        shade: false,
+        offset: 'rb',
+        resize: false,
+        success: function(layero, index){
+          layer.style(index, {
+            marginLeft: -10,
+            marginTop: -10
+          });
+        },
+        content: '<ul class="site-dir layui-layer-wrap" style="display: block;">'+
+          '<li><a href="#datatable" class="layui-this"><cite>基本数据表格</cite></a></li>'+
+          '<li><a href="#datatree" class=""><cite>树形组件</cite><span class="layui-badge-dot"></span></a></li>'+
+          '<li><a href="#datetime"><cite>基本日期框</cite></a></li>'+
+          '<li><a href="#datetime2"><cite>组合日期框</cite></a></li>'+
+          '<li><a href="#getdate"><cite>获取日期时间</cite></a></li>'+
+          '<li><a href="#request"><cite>网络请求</cite></a></li>'+
+          '<li><a href="#ontab"><cite>监听Tab切换事件</cite></a></li>'+
+          '<li><a href="#onsubmit"><cite>监听表单提交事件</cite></a></li>'+
+          '<li><a href="#onswitch"><cite>监听switch操作事件</cite></a></li>'+
+          '<li><a href="#verify"><cite>表单自定义验证规则</cite></a></li>'+
+          '<li><a href="#open"><cite>打开弹出层</cite></a></li>'+
+          '<li><a href="#tab"><cite>添加tabs页</cite></a></li>'+
+          '<li><a href="#close"><cite>关闭弹出层</cite></a></li>'+
+          '<li><a href="#base_reload"><cite>刷新父窗口</cite></a></li>'+
+          '<li><a href="#NProgress"><cite>请求进度条</cite></a></li>'+
+          '<li><a href="#msg"><cite>弹出提示框</cite></a></li>'+
+          '<li><a href="#msghide"><cite>弹出半透明提示层</cite></a></li>'+
+          '<li><a href="#confirm"><cite>弹出询问框</cite></a></li>'+
+          '<li><a href="#load"><cite>弹出加载层</cite></a></li>'+
+          '</ul>'
+      });
+    });
+</script>
+
+</html>

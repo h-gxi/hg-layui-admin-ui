@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <style>
+        .layui-backlog .layui-backlog-body {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            color: #999;
+            border-radius: 2px;
+            transition: all .3s;
+            -webkit-transition: all .3s
+        }
+
+        .layui-backlog-body h3 {
+            padding-bottom: 10px;
+            font-size: 12px
+        }
+
+        .layui-backlog-body p cite {
+            font-style: normal;
+            font-size: 30px;
+            font-weight: 300;
+            color: #333
+        }
+
+        .layui-backlog-body:hover {
+            background-color: #CFCFCF;
+            color: #888
+        }
+    </style>
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body ">
+                        <blockquote class="layui-elem-quote">欢迎管理员：
+                            <span style="color: red;">admin</span>！上一次登录时间：2019年12月6日16:28:39
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">数据统计</div>
+                    <div class="layui-card-body ">
+                        <ul class="layui-row layui-col-space10 layui-this x-admin-carousel layui-backlog">
+                            <li class="layui-col-md2 layui-col-xs6">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>账户数</h3>
+                                    <p>
+                                        <cite>21</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md2 layui-col-xs6">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>部门数</h3>
+                                    <p>
+                                        <cite>5</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md2 layui-col-xs6">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>通知数</h3>
+                                    <p>
+                                        <cite>253</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md2 layui-col-xs6">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>上传数</h3>
+                                    <p>
+                                        <cite>121</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md2 layui-col-xs6">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>下载数</h3>
+                                    <p>
+                                        <cite>311</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-md2 layui-col-xs6 ">
+                                <a href="javascript:;" class="layui-backlog-body">
+                                    <h3>操作数</h3>
+                                    <p>
+                                        <cite>2766</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-col-md12 layui-card scrollBox" lay-height='full-250'>
+                    <div class="layui-card-header">
+                        更新日志
+                    </div>
+                    <div class="layui-card-body">
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">HG框架简介</h3>
+                                    <p>
+                                        HG-Layui-UI框架，是基于layui最新版UI搭建的一套通用后台管理框架，借鉴了市面上各大主流框架风格，采用iframe标签页实现，保留了传统开发模式的简单实用性。<br>
+                                        为快速开发减少重复代码量，框架内部admin.js中封装了常用的组件，包括弹窗提示、日期组件、表单监听、表单验证、数据表格组件、树形组件和request获取数据方法等。
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">2020-03-23更新</h3>
+                                    <p>
+                                        HG-Layui-UI框架升级1.1版。<br>
+                                        移除原有图标库，集成Font Awesome V4.7字体图标库。<br>
+                                        优化了页面样式，框架中全部替换为使用新的图标样式。<br>
+                                        增加了皮肤设置，config文件夹下skin.json中设置配色，字号大小目前只修改tabs标签文字大小。<br>
+                                        修复火狐浏览器打开皮肤设置出现闪屏问题。<br>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">2020-02-24更新</h3>
+                                    <p>
+                                        增加hg-event自定义click事件。<br>
+                                        增加fullscreen全屏，配合hg-event使用。<br>
+                                        修复iframe中无法使用全屏问题。<br>
+                                        修复lay-height='full'与layui-col冲突问题。<br>
+                                        增加lay-height='auto'在与多个同级元素时使用，根据下一个元素计算高度。<br>
+                                        修复fullscreen全屏模式下，按Esc键退出全屏后，全屏图标显示错误问题。<br>
+                                        增加树形组件不显示多选框时，选中一个节点高亮显示，同时支持tree.getChecked()获得选中节点。<br>
+                                        加载admin.js初始化form表单组件。<br>
+                                        修改datatable，监听行工具事件，增加返回参数(obj, field)，field为当前点击单元格id。<br>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">2020-01-03更新</h3>
+                                    <p>
+                                        修复使用scrollBar滚动条插件时宽度不对齐问题。<br>
+                                        增加tabs标签页向左向右滚动按钮。<br>
+                                        修改兼容小屏幕样式，左侧菜单伸缩状态下展开列表仅显示图标。<br>
+                                        伸缩左侧菜单时取消折叠菜单操作。<br>
+                                        增加hg.table.datatable已知数据加载，url参数直接赋值Array对象。<br>
+                                        增加hg.msghide(content, time)，弹出半透明提示层。<br>
+                                        增加hg.load(callbackmething)，弹出加载层。<br>
+                                        增加HG使用文档页面。<br>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">2019-12-19更新</h3>
+                                    <p>
+                                        修改官方Layui.tree树形组件源码，增加懒加载模式，data参数lazy: true 开启子节点懒加载方式，需要配合spread事件使用。<br>
+                                        增加spread事件，lazy为true时，展开节点时触发该事件，obj.elem:节点元素，obj.state:状态open/close，obj.data:节点数据。<br>
+                                        增加tree.lazytree(treeid, elem, children)方法，懒加载子节点数据展示。<br>
+                                        增加hg.table.datatable(layid, 'resize')方法，重置表格大小。<br>
+                                        增加hg.ontab(layfilter, _callback)方法，监听Tab切换事件。<br>
+                                        增加datatable实例化对象扩展方法，table.getSelected() 获取选中行,table.reload(where) 重载表格,table.resize() 重置表格大小。<br>
+                                        增加hg.tree.datatree(layid, data, showCheckbox, showLine, accordion, onlyIconControl, isJump)方法，基本树形组件。<br>
+                                        增加datatree实例对象事件与方法onclick() oncheck() onspread() getChecked() setChecked() reload()。<br>
+                                        增加spread()事件中this.lazytree(data)方法，触发懒加载子节点。<br>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">2019-11-01更新</h3>
+                                    <p>
+                                        引用layui-v2.5.5最新版。<br>
+                                        增加主页面布局，由顶部layui-header、左侧菜单layui-left-nav和内容展示区域layui-page-content组成。<br>
+                                        增加顶部layui-header，LOGO和标题展示，顶部一级菜单展示。<br>
+                                        增加左侧菜单layui-left-nav，支持3级菜单，默认手风琴展开模式。<br>
+                                        增加hg.add_tab、hg.del_tab、hg.add_lay_tab方法，用来管理tabs页。<br>
+                                        增加顶部菜单与左侧菜单联动效果，切换tabs页时自动定位当前菜单项。<br>
+                                        增加tabs页选项卡操作，刷新当前页面，关闭其他页面，关闭全部页面。<br>
+                                        增加侧边伸缩按钮，在选项卡栏最左侧，改变左侧菜单展示状态。<br>
+                                        引用jquery-1.9.1插件，依赖第三方jquery插件时用到。<br>
+                                        引用jquery.scrollBar.js插件，美化滚动条样式，class="scrollBox"。<br>
+                                        引用jquery.NProgress.js插件，请求进度条样式，iframe页面加载时显示。<br>
+                                        修改layui默认样式颜色，默认主题以蓝色为主。<br>
+                                        增加hg.msg(content, title)方法，弹出提示框。<br>
+                                        增加hg.confirm(content, title, callbackmething)方法，弹出询问框。<br>
+                                        增加hg.open(title, url, w, h, full)方法，打开弹出层。<br>
+                                        增加hg.close()方法，关闭弹出层。<br>
+                                        增加hg.base_reload()方法，刷新父窗口。<br>
+                                        增加hg.datetime(btime, etime, options)方法，基本日期框选择。<br>
+                                        增加hg.datetime2(elem, type, min, max)方法，组合日期框选择。<br>
+                                        增加hg.getdate(type, e)方法，获取日期时间。<br>
+                                        增加hg.request(url, data, type, contentType, dataType, async, funSuccess)方法，网络请求。<br>
+                                        增加hg.form.onsubmit(layfilter, _callback)方法，监听表单提交事件。<br>
+                                        增加hg.form.onswitch(layfilter, _callback)方法，监听switch操作事件。<br>
+                                        增加hg.form.verify(options)方法，表单自定义验证规则。<br>
+                                        增加hg.table.datatable(layid, title, url, where, cols, toolbar, page, height, defaultToolbar, totalRow)方法，基本数据表格。<br>
+                                        增加hg.table.toolbaronclick(layid, index)方法，监听toolbar自定义事件。<br>
+                                        增加datatable，监听行工具事件，操作行lay-event中定义值为触发函数名。<br>
+                                        增加hg.table.printall(cols, data)方法，打印任意数据，defaultToolbar='printall'。<br>
+                                        增加hg.table.exportfile(layid, data)方法，导出任意数据，defaultToolbar='exportsall'。<br>
+                                        增加hg.table.datatablestatus，状态属性集合。<br>
+                                        修改datatable，支持easyui数据格式解析方式，包括分页参数page和rows。<br>
+                                        修改datatable，工具条toolbar参数添加handler: function (obj, row)匿名函数方式。<br>
+                                        增加hg.table.datatable(layid, 'reload', where)方法，重载表格。<br>
+                                        增加hg.table.getSelected(layid, 'getSelected')方法，获取选中行。<br>
+                                        添加lay-height全屏高度设置属性，lay-height='full'，'full'='full-200'。<br>
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <style id="welcome_style"></style>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

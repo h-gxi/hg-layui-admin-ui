@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <style>
+        .demo-tree{
+            width: 500px; height: 620px;
+            padding-top: 15px;
+        }
+        .demo-tree-box{
+            width: 500px; height: 600px;border: 1px #eee solid;overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class="fa fa-file-text fa-fw"></i> 树形组件
+                <span class="layui-layout-right">
+                    <a href="javascript:;" hg-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full"></i>
+                    </a>
+                </span>
+            </div>
+            <div class="layui-card-body">
+                <div class="">
+                    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="reload()"><i
+                            class="layui-icon">&#xe640;</i>实例重载</button>
+                </div>
+                <div class="demo-tree">
+                    <div id="treeid" class="demo-tree demo-tree-box"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var tree;
+    hg.request('tree.json', function (data) {
+        if (data || data.count > 0) {
+            tree = hg.tree.datatree('treeid', data.data, true);
+            tree.onspread = function() {
+                var obj = this; 
+                //模拟post后台数据，延迟0.5秒
+                setTimeout(() => {
+                    hg.request('tree.json',function(data) {
+                        if (data || data.count > 0){
+                            obj.lazytree(data.data);
+                        }
+                    });
+                }, 500);
+            }
+            tree.onclick = function() {
+                var obj = this; 
+                console.log(obj.data); //得到当前点击的节点数据
+                console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                console.log(obj.elem); //得到当前节点元素
+                console.log(obj.data.children); //当前节点下是否有子节点
+            }
+            tree.oncheck = function() {
+                var obj = this; 
+                console.log(obj.data); //得到当前点击的节点数据
+                console.log(obj.checked); //得到当前节点的展开状态：open、close、normal
+                console.log(obj.elem); //得到当前节点元素
+            }
+        }
+    });
+
+    //实例重载
+    function reload(){
+        tree.reload();
+    }
+        
+</script>
+
+</html>

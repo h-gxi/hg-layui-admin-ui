@@ -1,0 +1,43 @@
+.scrollBox{
+    float:left;
+    overflow:auto;
+}
+.scrollBox:nth-of-type(2n){
+    margin-right:10px;
+}
+.scrollBox:nth-of-type(3),
+.scrollBox:nth-of-type(4){
+    margin-top:0;
+}
+.zl-scrollBarBox{
+    height:100%;
+    position:absolute;
+}
+.zl-scrollBar{
+    position:absolute;
+    left:0;
+    top:0;
+    /* background:#848484; */
+    transition:background 0.3s;
+}
+.zl-scrollBarBackground{
+    background:#848484;
+}
+.zl-scrollBar.zl-verticalBar{
+    min-height:10px;
+}
+.zl-scrollBar.zl-horizontalBar{
+    min-width:10px;
+}
+.zl-scrollBar:hover{
+    background:#848484;
+}
+.zl-scrollContentDiv{
+    position:relative !important;
+    width:100% !important;
+    height:100% !important;
+    padding:0 !important;
+    margin:0 !important;
+    top:0;
+    left:0;
+}

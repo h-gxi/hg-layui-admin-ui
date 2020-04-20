@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" href="./css/font-awesome.min.css">
+  <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+  <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+  <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+  <script type="text/javascript" src="./lib/layui/layui.js"></script>
+  <script type="text/javascript" src="./lib/admin/admin.js"></script>
+  <!--[if lt IE 9]>
+        <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="layui-body-content">
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body ">
+        <form class="layui-form layui-col-md12  layui-form-pane">
+          <div class="layui-form-item x-city" id="start">
+            <label class="layui-form-label">城市联动</label>
+            <div class="layui-input-inline">
+              <select name="province" lay-filter="province">
+                <option value="">请选择省</option>
+              </select>
+            </div>
+            <div class="layui-input-inline">
+              <select name="city" lay-filter="city">
+                <option value="">请选择市</option>
+              </select>
+            </div>
+            <div class="layui-input-inline">
+              <select name="area" lay-filter="area">
+                <option value="">请选择县/区</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="layui-form-item x-city" id="end">
+            <label class="layui-form-label">城市联动</label>
+            <div class="layui-input-inline">
+              <select name="province" lay-filter="province">
+                <option value="">请选择省</option>
+              </select>
+            </div>
+            <div class="layui-input-inline">
+              <select name="city" lay-filter="city">
+                <option value="">请选择市</option>
+              </select>
+            </div>
+            <div class="layui-input-inline">
+              <select name="area" lay-filter="area">
+                <option value="">请选择县/区</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <hr>
+      <div class="layui-card-body ">
+        <pre class="layui-code" lay-title="JavaScript">
+//xcity城市插件 基于于jquery与layui form 模块，使用之前先确认这两者是否引入 
+//插件文件为 xcity.js,引入
+id所有标签需要有class x-city  id没有根据自己需要定义
+select lay-filter 属性值 为必须 "province/city/area"
+//初始化
+$('#x-city').xcity();
+//传默认值 
+$('#x-city').xcity('广东','广州市','东山区');
+        </pre>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./lib/admin/xcity.js"></script>
+  <script>
+    layui.use(['form', 'code'], function () {
+      form = layui.form;
+
+      layui.code();
+
+      $('#start').xcity();
+
+      $('#end').xcity('广东', '广州市', '东山区');
+
+    });
+  </script>
+</body>
+
+</html>

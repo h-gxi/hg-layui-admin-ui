@@ -1,0 +1,14 @@
+@charset "utf-8";
+
+/* =========================登录页样式.开始======================= */
+.layui-login {background: url("../images/login.jpg");background-attachment: fixed;background-position: center top;background-repeat: no-repeat;background-size: cover;text-align: center;}
+.login-wrap{ width:400px; margin:9% auto 0px auto; background:#fff; padding:20px 0 40px 0}
+.login-logo{ margin:0 auto 10px; text-indent:-9999em; width:160px; height:42px; background:url("../Images/logo2.png") no-repeat; }
+.login-form .col{ position:relative; padding:10px 0; }
+.login-form .col .icon{ position:absolute; display:block; top:24px; left:10px; width:14px; height:14px; background:url("../Images/skin_icons.png") no-repeat; cursor:pointer; }
+.login-form .col .icon.user{ background-position:0 -140px; }
+.login-form .col .icon.pwd{ background-position:-28px -140px; }
+.login-form .col .login-input{ display:block; padding:5px 10px 5px 34px; background:#fff; border:0; border-radius:3px; font-size:16px; line-height:32px; *line-height:30px; height:32px; width:293px; color:#333; border:1px #dedede solid }
+.login-form .col .login-btn{ display:block; padding:5px 0; font-size:18px; color:#fff; width:100%; line-height:28px; height:42px; background:#009688; border:0; border-radius:3px; letter-spacing:.5em; cursor:pointer; }
+/* ==========================登录页样式.结束======================== */
+

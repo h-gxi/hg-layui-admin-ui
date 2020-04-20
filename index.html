@@ -1,0 +1,345 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hg-Layui后台管理v1.1</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+
+    <!-- 请求进度条插件 -->
+    <script src='./lib/nprogress/nprogress.js'></script>
+    <link rel='stylesheet' href='./lib/nprogress/nprogress.css' />
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <script>
+        /^http(s*):\/\//.test(location.href) || alert('请先部署到 localhost 下再访问');
+    </script>
+</head>
+
+<body class="layui-layout-body" style="display: none;">
+    <div class="layui-layout layui-layout-admin">
+
+        <!-- 顶部 -->
+        <div class="layui-header">
+            <div class="logo">
+                <a href="javascript:;" onclick="$('.layui-tab-title .home').eq(0).click();">
+                    <img src="images/logo.png" class="layui-nav-img">
+                    <span class="layui-hide-xs">Hg-Layui后台管理v1.1</span>
+                </a>
+            </div>
+            <ul class="layui-nav left layui-hide-xs" lay-filter="nav-top">
+                <li meun_id="0" class="layui-nav-item layui-this"><a href="javascript:;">UI组件</a></li>
+                <li meun_id="1" class="layui-nav-item"><a href="javascript:;">Demo</a></li>
+                <li class="layui-nav-item"><a href="javascript:;">新页面</a>
+                    <dl class="layui-nav-child">
+                        <!-- 二级菜单 -->
+                        <dd lay-unselect>
+                            <a onclick="hg.open('最大化','http://www.baidu.com','','',true)">
+                                <i class="fa fa-window-maximize fa-fw"></i>弹出最大化</a></dd>
+                        <dd lay-unselect>
+                            <a onclick="hg.open('弹出自动宽高','http://www.baidu.com')">
+                                <i class="fa fa-window-restore fa-fw"></i>弹出自动宽高</a></dd>
+                        <dd lay-unselect>
+                            <a onclick="hg.open('弹出指定宽高','http://www.baidu.com',500,300)">
+                                <i class="fa fa-clone fa-fw"></i>弹出指定宽高</a></dd>
+                        <dd lay-unselect>
+                            <a onclick="hg.add_tab('在tab打开','member-list.html')">
+                                <i class="fa fa-tag fa-fw"></i>在tab打开</a></dd>
+                        <dd lay-unselect>
+                            <a onclick="hg.add_tab('在tab打开刷新','member-del.html',true)">
+                                <i class="fa fa-tags fa-fw"></i>在tab打开刷新</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav left layui-hide-sm layui-hide-md layui-hide-lg" lay-filter="nav-top">
+                <li class="layui-nav-item"><a href="javascript:;">菜单</a>
+                    <dl class="layui-nav-child">
+                        <dd meun_id="0" lay-unselect><a onclick=""><i class="fa fa-pencil-square fa-fw"></i>UI组件</a></dd>
+                        <dd meun_id="1" lay-unselect><a onclick=""><i class="fa fa-sign-out fa-fw"></i>Demo</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav right">
+                <li class="layui-nav-item layui-hide-xs" lay-unselect><a href="javascript:;" hg-event="fullscreen" title="全屏"><i
+                    class="fa fa-arrows-alt fa-lg"></i></a></li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect><a href="javascript:;" onclick="cleancache()" hg-event="delSkinConfig" title="清除缓存"><i
+                            class="fa fa-trash-o fa-lg"></i></a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><img src="./images/touxiang.jpg" class="layui-nav-img"><span>一如既往</span></a>
+                    <dl class="layui-nav-child">
+                        <dd lay-unselect><a onclick="hg.add_tab('修改密码','page/changePwd.html')"><i
+                                    class="fa fa-pencil-square fa-fw"></i>修改密码</a></dd>
+                        <dd lay-unselect><a href="./login.html"><i class="fa fa-sign-out fa-fw"></i>退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect><a href="javascript:;" hg-event="skinConfig"><i
+                            class="fa fa-ellipsis-v fa-lg"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- 左侧菜单 -->
+        <div class="layui-left-nav scrollBox">
+            <div id="side-nav">
+                <!-- meun_id=0；UI组件 -->
+                <ul id="nav" class="layui-tab-item layui-show">
+                    <li class="open">
+                        <a class="border active"><i class="fa fa-cog fa-fw"></i><cite>组件</cite><i
+                                class="fa fa-angle-up fa-fw nav_right"></i></a>
+                        <ul class="sub-menu" style="display: block;">
+                            <li class="sub-tab" hg-title="按钮" hg-nav="component/button/index.html">
+                                <a><i class="fa fa-tag fa-fw"></i><cite>按钮</cite></a>
+                            </li>
+                            <li>
+                                <a><i class="fa fa-pencil-square-o fa-fw"></i><cite>表单</cite><i
+                                        class="fa fa-angle-down fa-fw nav_right"></i></a>
+                                <ul class="sub-menu">
+                                    <li class="sub-tab" hg-title="表单元素" hg-nav="component/form/element.html">
+                                        <a><i class="fa fa-file-text fa-fw"></i><cite>表单元素</cite></a>
+                                    </li>
+                                    <li class="sub-tab" hg-title="表单组合" hg-nav="component/form/group.html">
+                                        <a><i class="fa fa-file-text fa-fw"></i><cite>表单组合</cite></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sub-tab" hg-title="面板" hg-nav="component/panel/index.html">
+                                <a><i class="fa fa-clone fa-fw"></i><cite>面板</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="导航" hg-nav="component/nav/index.html">
+                                <a><i class="fa fa-flag fa-fw"></i><cite>导航</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="选项卡" hg-nav="component/tabs/index.html">
+                                <a><i class="fa fa-exchange fa-fw"></i><cite>选项卡</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="徽章" hg-nav="component/badge/index.html">
+                                <a><i class="fa fa-bookmark fa-fw"></i><cite>徽章</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="时间线" hg-nav="component/timeline/index.html">
+                                <a><i class="fa fa-clock-o fa-fw"></i><cite>时间线</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="辅助" hg-nav="component/auxiliar/index.html">
+                                <a><i class="fa fa-sliders fa-fw"></i><cite>辅助</cite></a>
+                            </li>
+                            <li>
+                                <a><i class="fa fa-cloud-upload fa-fw"></i><cite>上传</cite><i
+                                        class="fa fa-angle-down fa-fw nav_right"></i></a>
+                                <ul class="sub-menu">
+                                    <li class="sub-tab" hg-title="上传演示一" hg-nav="component/upload/demo1.html">
+                                        <a><i class="fa fa-folder-open fa-fw"></i><cite>上传演示一</cite></a>
+                                    </li>
+                                    <li class="sub-tab" hg-title="上传演示二" hg-nav="component/upload/demo2.html">
+                                        <a><i class="fa fa-folder-open fa-fw"></i><cite>上传演示二</cite></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-font fa-fw"></i><cite>字体图标</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li class="sub-tab" hg-title="字体图标" hg-nav="fonts/icon.html">
+                                <a><i class="fa fa-anchor fa-fw"></i><cite>字体图标</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-gavel fa-fw"></i><cite>layui第三方组件</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li class="sub-tab" hg-title="富文本编辑器" hg-nav="https://fly.layui.com/extend/tinymce/">
+                                <a><i class="fa fa-file-code-o fa-fw"></i><cite>富文本编辑器</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="下拉多选" hg-nav="https://fly.layui.com/extend/xmSelect/">
+                                <a><i class="fa fa-check-square fa-fw"></i><cite>xmSelect下拉多选</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="多选框" hg-nav="https://fly.layui.com/extend/formSelects/">
+                                <a><i class="fa fa-list-alt fa-fw"></i><cite>formSelects 4.x 多选框</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="树形表格" hg-nav="https://fly.layui.com/extend/treeTable/">
+                                <a><i class="fa fa-table fa-fw"></i><cite>treeTable 树形表格</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="下拉表格" hg-nav="https://fly.layui.com/extend/tableSelect/">
+                                <a><i class="fa fa-th-list fa-fw"></i><cite>下拉表格选择器</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="图片截取上传" hg-nav="https://fly.layui.com/extend/croppers/">
+                                <a><i class="fa fa-picture-o fa-fw"></i><cite>cropper 图片截取上传</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="通知控件" hg-nav="https://fly.layui.com/extend/notice/">
+                                <a><i class="fa fa-volume-up fa-fw"></i><cite>notice 通知控件</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="分步表单" hg-nav="https://fly.layui.com/extend/step-lay/">
+                                <a><i class="fa fa-calendar-o fa-fw"></i><cite>step-lay 分步表单</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-paper-plane fa-fw"></i><cite>帮助</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li class="sub-tab" hg-title="使用文档" hg-nav="readme.html">
+                                <a><i class="fa fa-question-circle fa-fw"></i><cite>HG使用文档</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- meun_id=1；Demo -->
+                <ul id="nav" class="layui-tab-item">
+                    <li class="open">
+                        <a class="border active"><i class="fa fa-database fa-fw"></i><cite>数据表格</cite><i
+                                class="fa fa-angle-up fa-fw nav_right"></i></a>
+                        <ul class="sub-menu" style="display: block;">
+                            <li class="sub-tab" hg-title="数据表格一" hg-nav="DataGrid.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基本数据表格一</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="数据表格二" hg-nav="DataGrid1.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基本数据表格二</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="数据表格三" hg-nav="DataGrid2.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基础数据表格三</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="数据表格四" hg-nav="DataGrid3.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基础数据表格四</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-sitemap fa-fw"></i><cite>树形组件</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li class="sub-tab" hg-title="树形组件" hg-nav="Tree1.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>树形组件</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="树形组件" hg-nav="Tree.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>树形组件大数据</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-tasks fa-fw"></i><cite>城市联动</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li class="sub-tab" hg-title="三级地区联动" hg-nav="city.html">
+                                <a><i class="fa fa-ticket fw"></i><cite>三级地区联动</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-cogs fa-fw"></i><cite>其它页面</cite><i
+                                class="fa fa-angle-down fa-fw nav_right"></i></a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="login.html" target="_blank"><i
+                                        class="fa fa-user-circle fa-fw"></i><cite>登录页</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="404页面" hg-nav="404.html">
+                                <a><i class="fa fa-internet-explorer fa-fw"></i><cite>404页面</cite></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="layui-page-content">
+            <div class="layui-tab tab" lay-unauto lay-allowClose="true" lay-filter="xbs_tab">
+                <span class="indent-tab left" title="侧边伸缩"><i class="fa fa-dedent fa-lg"></i></span>
+                <div class="indent-tab left fa fa-step-backward fa-fw"></div>
+                <ul class="layui-nav">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="fa fa-dot-circle-o fa-fw"></i> 页面操作</a>
+                        <dl class="layui-nav-child">
+                            <dd lay-unselect data-page-close="this">
+                                <a href="javascript:;"><i class="fa fa-refresh fa-fw"></i> 刷新当前</a>
+                            </dd>
+                            <dd lay-unselect data-page-close="other">
+                                <a href="javascript:;"><i class="fa fa-ban fa-fw"></i> 关闭其他</a>
+                            </dd>
+                            <dd lay-unselect data-page-close="all">
+                                <a href="javascript:;"><i class="fa fa-power-off fa-fw"></i> 关闭全部</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+                <div class="indent-tab right fa fa-step-forward fa-fw"></div>
+                <ul class="layui-tab-title">
+                    <li class="home layui-this"><i class="fa fa-home fa-fw"></i></li>
+                </ul>
+                
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <iframe src='./home.html' frameborder="0" scrolling="yes" class="hg-iframe"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hg-config" style="display: none;">
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <fieldset class="layui-elem-field layui-field-title"><legend>主题</legend></fieldset>
+                    <div class="layui-col-md12">
+                        <ul class="skin">   
+                        </ul>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <fieldset class="layui-elem-field layui-field-title"><legend>字号</legend></fieldset>
+                    <div class="layui-col-md12">
+                        <form class="layui-form layui-form-pane" action="">
+                            <div class="layui-form-item" pane="">
+                                <div class="layui-input-line">
+                                  <input type="radio" name="fontsize" value="lg" title="大号">
+                                  <input type="radio" name="fontsize" value="md" title="默认">
+                                  <input type="radio" name="fontsize" value="sm" title="小号">
+                                  <input type="radio" name="fontsize" value="xs" title="超小">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="./lib/layui/lay/modules/form.js"></script>
+    </div>
+    
+
+    <script>
+        //注意：element未作封装处理，使用layui.use引用
+        layui.use(['element'], function () {
+            var element = layui.element;
+            console.log('触发了layui.element');
+            
+        });
+        function cleancache(){
+            var a = hg.load(function(){
+                var that = this;
+                setTimeout(function(){
+                    //that.close(); //关闭加载层
+                    a.close();
+                    hg.msghide('清除服务器缓存成功.');
+                },2000);
+            })
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-tab layui-tab-brief" lay-filter="tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="card1"><i class="fa fa-file-text fa-fw"></i> 分页批量删除</li>
+                <li lay-id="card2"><i class="fa fa-file-text fa-fw"></i> 分页导出所有数据</li>
+                <span class="layui-layout-right">
+                    <a href="javascript:;" hg-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full"></i>
+                    </a>
+                </span>
+            </ul>
+            
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" autocomplete="off" placeholder="开始日" name="start" id="start">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" autocomplete="off" placeholder="截止日" name="end" id="end">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" type="text" name="username" placeholder="请输入用户名" autocomplete="off">
+                                    </div>
+                                    <div class="layui-inline layui-show-xs-block">
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                            lay-filter="sreach"><i class="layui-icon layui-icon-sm">&#xe615;</i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="layui-hide" id="test" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-item">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" autocomplete="off" placeholder="开始日" name="start2" id="start2">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" autocomplete="off" placeholder="截止日" name="end2" id="end2">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input class="layui-input layui-input-sm" type="text" name="username" placeholder="请输入用户名" autocomplete="off">
+                                    </div>
+                                    <div class="layui-inline layui-show-xs-block">
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                            lay-filter="sreach2"><i class="layui-icon layui-icon-sm">&#xe615;</i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <button class="layui-btn layui-btn-sm layui-btn-normal"
+                                    onclick="hg.open('添加用户','./DataGrid-add.html',600,400)"><i
+                                        class="layui-icon">&#xe654;</i>添加</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" onclick="edit()"><i
+                                        class="layui-icon">&#xe642;</i>修改</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="del()"><i
+                                        class="layui-icon">&#xe640;</i>删除</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="exportsall('test4')"><i
+                                        class="layui-icon">&#xe601;</i>导出所有数据</button>
+                            </div>
+                            <table class="layui-hide" id="test4" lay-filter="test4"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 分页批量删除 -->
+<script>
+    //修改
+    function edit(obj) {
+        //obj通过行tool修改-lay-event
+        var row = obj ? obj : hg.table.datatable('test', 'getSelected');
+        if (row) {
+            hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
+        } else {
+            hg.msg('请选中一行数据，再操作！');
+        }
+    }
+    //删除
+    function del(obj) {
+        //obj通过行tool删除-lay-event
+        var row = obj ? obj : hg.table.datatable('test', 'getSelected');
+        if (row) {
+            hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
+                row.del(); //只删本地数据
+                hg.msg('删除成功！');
+                hg.table.datatable('test', 'reload');
+            });
+        } else {
+            hg.msg('请选中一行数据，再操作！');
+        }
+    }
+    //查看部门
+    function depts(obj, field) {
+        console.log(field); //点击的单元格
+        hg.msg(JSON.stringify(obj.data));
+    }
+    //监听switch操作事件
+    hg.form.onswitch('doflag',function(data){
+        hg.msg(data.elem.name+'开关checked：'+(data.elem.checked===true?'开启':'禁用'));
+        console.log(data.elem.checked);
+        console.log(data.elem.name);
+        console.log(data.elem.value);
+        console.log(data.othis);
+    });
+    //监听表单提交事件
+    hg.form.onsubmit('sreach', function (data) {
+        var start = data.start;
+        var end = data.end;
+        if (start && end) {
+            if (start > end) {
+                hg.msg("时间范围错误，请重新选择!");
+                return false;
+            }
+        } else if (start || end) {
+            hg.msg("时间范围错误，请重新选择!");
+            return false;
+        }
+        hg.msg(JSON.stringify(data));
+        table && table.reload(data);
+    });
+    //日期控件
+    hg.datetime('#start', '#end', {
+        type: 'datetime',
+        value: hg.getdate('datetime', -30),
+        value2: hg.getdate('datetime', '23:59:59'),
+        min: hg.getdate('date', -365),
+        max: hg.getdate(),
+    });
+    var tableCols = [[
+        { type: 'checkbox' }, 
+        { field: 'id', width: 80, title: 'ID', sort: true }, 
+        { field: 'username', width: 80, title: '用户名', style: 'color: #ff5722;' }, 
+        { field: 'sex', width: 80, title: '性别', sort: true }, 
+        { field: 'city', width: 80, title: '城市', hide: true }, 
+        { field: 'sign', title: '签名', width: '20%', minWidth: 100 }, 
+        { 
+            field: 'experience', title: '积分', sort: true, templet: function (d) {
+                if (d.experience > 500) {
+                    return '<span style="color: #F581B1;">' + d.experience + '</span>';
+                }
+                return d.experience;
+            }
+        }, 
+        { field: 'score', title: '评分', sort: true }, 
+        { field: 'classify', title: '职业' }, 
+        { 
+            field: 'wealth', width: 80, title: '部门', templet: function (d) {
+                return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="depts">查看</a>'
+            }
+        },
+        { 
+            field: 'flag', width: 100, title: '是否禁用', templet: function (d) {
+                var checked = d.flag == 0 ? 'checked' : '';
+                return '<input type="checkbox" name ="' + d.id + '" value= ' + d.flag +
+                    ' lay-skin="switch" lay-text="开启|禁用" lay-filter="doflag" ' + checked + '>'
+            }
+        }, 
+        { 
+            field: 'right', width: 120, title: '操作', templet: function (d) {
+                return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>'
+            }
+        }
+    ]];
+    var toolbar = [{
+            text: '添加',
+            layuiicon: '&#xe608;',
+            handler: function () {
+                hg.open('添加用户', './DataGrid-add.html', 600, 400);
+            }
+        },
+        {
+            text: '修改',
+            layuiicon: '&#xe642;',
+            handler: function (obj, row) {
+                if (row) {
+                    hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
+                } else {
+                    hg.msg('请选中一行数据，再操作！');
+                }
+            }
+        }, {
+            text: '批量删除',
+            layuiicon: '&#xe640;',
+            handler: function (obj, row) {
+                if (obj.checkstatus && obj.checkstatus.data.length > 0) {
+                    hg.confirm("批量删除当前所有选中的用户，确定要删除吗？", function () {
+                        // $(".layui-table-view[lay-id='test'] .layui-form-checked").not('.header').parents('tr').remove();
+                        hg.msg('批量删除成功！');
+                        hg.table.datatable('test', 'reload');
+                    });
+                } else {
+                    hg.msg('请选中一个或多个复选框，再操作！');
+                }
+            }
+        }, {
+            text: '获取选中行数据',
+            layuiicon: '&#xe615;',
+            handler: function (obj, row) {
+                var json = '[]';
+                if (obj.checkstatus) {
+                    console.log(obj.checkstatus);
+                    json = JSON.stringify(obj.checkstatus.data);
+                }
+                hg.msg(json);
+            }
+        }
+    ];
+    //数据表格
+    var table = hg.table.datatable('test', '用户管理', 'data1.json', {}, tableCols, toolbar, true, 'full-140', ['filter', 'printall', 'exportsall']);
+    table.onrowclick(function(obj) {
+        console.log(obj);
+        console.log('行单击事件');
+   });
+
+</script>
+
+<!-- 分页导出所有数据 -->
+<script>
+    var tableCols_2 = [[
+        { field: 'id', width: 80, title: 'ID', sort: true }, 
+        { field: 'username', width: 80, title: '用户名' }, 
+        { field: 'sex', width: 80, title: '性别', sort: true }, 
+        { field: 'city', width: 80, title: '城市', hide: true }, 
+        { field: 'sign', title: '签名', width: 340 }, 
+        { field: 'experience', title: '积分', sort: true }, 
+        { field: 'score', title: '评分', sort: true }, 
+        { field: 'classify', title: '职业' }, 
+        { field: 'wealth', width: 80, title: '部门' }
+    ]];
+    var toolbar_2 = [{
+            text: '添加',
+            layuiicon: '&#xe608;',
+            handler: function () {
+                hg.open('添加用户', './DataGrid-add.html', 600, 400);
+            }
+        },
+        {
+            text: '修改',
+            layuiicon: '&#xe642;',
+            handler: function (obj, row) {
+                if (row) {
+                    hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
+                } else {
+                    hg.msg('请选中一行数据，再操作！');
+                }
+            }
+        }, {
+            text: '删除',
+            layuiicon: '&#xe640;',
+            handler: function (obj, row) {
+                if (row) {
+                    hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
+                        row.del(); //只删本地数据
+                        hg.msg('删除成功！');
+                        //obj.reload();
+                    });
+                } else {
+                    hg.msg('请选中一行数据，再操作！');
+                }
+            }
+        }
+    ];
+    hg.datetime('#start2', '#end2');
+    //监听表单提交事件2
+    hg.form.onsubmit('sreach2', function (data) {
+        var start2 = data.start2;
+        var end2 = data.end2;
+        if (start2 && end2) {
+            if (start2 > end2) {
+                hg.msg("时间范围错误，请重新选择!");
+                return false;
+            }
+        } else if (start2 || end2) {
+            hg.msg("时间范围错误，请重新选择!");
+            return false;
+        }
+        hg.msg(JSON.stringify(data));
+        hg.table.datatable('test4', 'reload', data);
+    });
+    //切换选项卡时加载表格数据
+    var table4;
+    hg.ontab('tab-card',function(){
+        var id = this.getAttribute('lay-id');
+        if (id === 'card1') {
+            table4 && table4.resize(); //hg.table.datatable('test', 'resize');
+        }
+        if (id === 'card2') {
+            if(!table4){
+                table4 = hg.table.datatable('test4', '用户管理', 'data1.json', {}, tableCols_2, '', true, 'full-180');
+            }
+            table4.resize(); //hg.table.datatable('test4', 'resize');
+        }
+    });
+    //打印任意数据
+    function printall(layid){
+        if(layid==='test'){ //页面多数据表格时判断
+            var start = $("#start").val();
+            var end = $("#end").val();
+            if (start && end) {
+                if (start > end) {
+                    hg.msg("时间范围错误，请重新选择!");
+                    return false;
+                }
+            } else if (start || end) {
+                hg.msg("时间范围错误，请重新选择!");
+                return false;
+            }
+            hg.request('data1.json', function (data) {
+                if (data || data.total > 0) {
+                    hg.table.printall(tableCols, data.rows);
+                    // hg.table.printall(layid); //打印当页数据
+                }
+            });
+        }
+    }
+    //导出任意数据
+    function exportsall(layid){
+        if(layid==='test4'){ //页面多数据表格时判断
+            var start = $("#start2").val();
+            var end = $("#end2").val();
+            if (start && end) {
+                if (start > end) {
+                    hg.msg("时间范围错误，请重新选择!");
+                    return false;
+                }
+            } else if (start || end) {
+                hg.msg("时间范围错误，请重新选择!");
+                return false;
+            }
+        }
+        hg.request('data1.json', function (data) {
+            if (data || data.total > 0) {
+                hg.table.exportfile(layid, data.rows);
+            }
+        });
+    }
+</script>
+
+</html>

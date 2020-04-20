@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <style>
+        .demo-tree{border-width: 1px;border-style: solid;border-color: #e6e6e6;margin: 10px 0 0 0;}
+    </style>
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md3" lay-height='auto'>
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <i class="fa fa-file-text fa-fw"></i> 部门树
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="">
+                            <button class="layui-btn layui-btn-sm layui-btn-normal"
+                                onclick="hg.open('添加部门','./DataGrid-add.html',600,400)"><i
+                                    class="layui-icon">&#xe654;</i>添加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" onclick="getTreeChecked()"><i
+                                    class="layui-icon">&#xe642;</i>修改</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="getTreeChecked()"><i
+                                    class="layui-icon">&#xe640;</i>删除</button>
+                        </div>
+                        <div class="demo-tree">
+                            <div id="treeid" class="demo-tree-box"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md9">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <i class="fa fa-file-text fa-fw"></i> 基本数据表格四
+                        <span class="layui-layout-right">
+                            <a href="javascript:;" hg-event="fullscreen">
+                                <i class="layui-icon layui-icon-screen-full"></i>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="">
+                            <button class="layui-btn layui-btn-sm layui-btn-normal"
+                                onclick="hg.open('添加用户','./DataGrid-add.html',600,400)"><i
+                                    class="layui-icon">&#xe654;</i>添加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" onclick="edit()"><i
+                                    class="layui-icon">&#xe642;</i>修改</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="del()"><i
+                                    class="layui-icon">&#xe640;</i>删除</button>
+                        </div>
+                        <table class="layui-hide" id="test" lay-filter="test"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //修改删除树节点
+    function getTreeChecked(e){
+        var checkData = tree.getChecked();
+        if(checkData){
+            hg.msg(JSON.stringify(checkData));
+        }
+        else{
+            hg.msg('请选中一个节点，再操作！');
+        }
+    }
+
+    //修改
+    function edit(obj) {
+        //obj通过行tool修改-lay-event
+        var row = obj ? obj : table.getSelected(); //hg.table.datatable('test', 'getSelected');
+        console.log(row);
+        if (row) {
+            hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
+        } else {
+            hg.msg('请选中一行数据，再操作！');
+        }
+    }
+    //删除
+    function del(obj) {
+        //obj通过行tool删除-lay-event
+        var row = obj ? obj : table.getSelected(); //hg.table.datatable('test', 'getSelected');
+        if (row) {
+            hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
+                //row.del(); //只删本地数据
+                hg.msg('删除成功！');
+                table && table.reload(); //hg.table.datatable('test', 'reload');
+            });
+        } else {
+            hg.msg('请选中一行数据，再操作！');
+        }
+    }
+    //查看部门
+    function depts(obj, field) {
+        console.log(field); //点击的单元格
+        hg.msg(JSON.stringify(obj.data));
+    }
+    //监听switch操作事件
+    hg.form.onswitch('doflag',function(data){
+        hg.msg(data.elem.name+'开关checked：'+(data.elem.checked===true?'开启':'禁用'));
+        console.log(data.elem.checked);
+        console.log(data.elem.name);
+        console.log(data.elem.value);
+        console.log(data.othis);
+    });
+    //日期控件
+    hg.datetime('#start', '#end', {
+        type: 'datetime',
+        value: hg.getdate('datetime', -30),
+        value2: hg.getdate('datetime', '23:59:59'),
+        min: hg.getdate('date', -365),
+        max: hg.getdate(),
+    });
+    var tableCols = [[
+        { field: 'id', width: 80, title: 'ID', sort: true }, 
+        { field: 'username', width: 80, title: '用户名', style: 'color: #ff5722;' }, 
+        { field: 'sex', width: 80, title: '性别', sort: true }, 
+        { field: 'city', width: 80, title: '城市', hide: true }, 
+        { field: 'sign', title: '签名', width: '30%', minWidth: 100 }, 
+        { 
+            field: 'experience', title: '积分', sort: true, totalRow: true, templet: function (d) {
+                if (d.experience > 500) {
+                    return '<span style="color: #F581B1;">' + d.experience + '</span>';
+                }
+                return d.experience;
+            }
+        }, 
+        { field: 'score', title: '评分', sort: true },
+        { field: 'classify', title: '职业' }, 
+        { 
+            field: 'wealth', width: 80, title: '部门', templet: function (d) {
+                return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="depts">查看</a>'
+            }
+        }, 
+        {
+            field: 'flag', width: 100, title: '是否禁用', templet: function (d) {
+                var checked = d.flag == 0 ? 'checked' : '';
+                return '<input type="checkbox" name ="' + d.id + '" value= ' + d.flag +
+                    ' lay-skin="switch" lay-text="开启|禁用" lay-filter="doflag" ' + checked + '>'
+            }
+        }, 
+        {
+            field: 'right', width: 120, title: '操作', templet: function (d) {
+                return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>'
+            }
+        }]
+    ];
+    //基本数据表格
+   var table = hg.table.datatable('test', '用户管理', 'data1.json', {}, tableCols, '', false, 'full-130');
+
+   var data = [{
+        id: 'hg-100',
+        field: '1',
+        level: '1',
+        title: '父节点100',
+        spread: true,
+        children: [{
+            id: 'hg-100101',
+            field: '3',
+            level: '2',
+            title: '子节点100101',
+            children: [{
+                id: 'hg-100101101',
+                field: '4',
+                level: '3',
+                title: '子节点100101101'
+            }, {
+                id: 'hg-100101102',
+                field: '5',
+                level: '3',
+                title: '子节点100101102'
+            }, {
+                id: 'hg-100101103',
+                field: '6',
+                level: '3',
+                title: '子节点100101103'
+            }]
+        }]
+    }, {
+        id: 'hg-200',
+        field: '2',
+        level: '1',
+        title: '父节点200',
+        lazy: true
+    }];
+    //treeid
+    var tree = hg.tree.datatree('treeid', data, false);
+    tree.onspread = function() {
+        var obj = this; 
+        //模拟post后台数据，延迟2秒
+        setTimeout(function(){
+            var data = getTreeJson(obj.data.id); //异步获取数据
+            obj.lazytree(data);
+        },2000);
+        // setTimeout(() => {
+        //     var data = getTreeJson(obj.data.id); //异步获取数据
+        //     obj.lazytree(data);
+        // }, 2000);
+    }
+    tree.onclick = function() {
+        var obj = this; 
+        console.log(obj.data); //得到当前点击的节点数据
+        console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+        console.log(obj.elem); //得到当前节点元素
+        console.log(obj.data.children); //当前节点下是否有子节点
+    }
+    tree.oncheck = function() {
+        var obj = this; 
+        console.log(obj.data); //得到当前点击的节点数据
+        console.log(obj.checked); //得到当前节点的展开状态：open、close、normal
+        console.log(obj.elem); //得到当前节点元素
+    }
+
+    // 模拟后台返回数据
+    function getTreeJson(id) {
+        if (id === 'hg-200') {
+            return [{
+                id: 'hg-200101',
+                level: '2',
+                title: '子节点200101'
+            }, {
+                id: 'hg-200102',
+                level: '2',
+                title: '子节点200102',
+                lazy: true
+            }];
+        }
+        if (id === 'hg-200102') {
+            return [{
+                id: 'hg-200102101',
+                level: '3',
+                title: '子节点200102101'
+            }, {
+                id: 'hg-200102102',
+                level: '3',
+                title: '子节点200102102',
+                lazy: true
+            }];
+        }
+        if (id === 'hg-200102102') {
+            return [{
+                id: 'hg-200102102101',
+                level: '4',
+                title: '子节点200102102101'
+            }, {
+                id: 'hg-200102102102',
+                level: '4',
+                title: '子节点200102102102',
+            }];
+        }
+    }
+</script>
+
+</html>

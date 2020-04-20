@@ -1,0 +1,29 @@
+{
+  "code": 0,
+  "data":[
+    {
+      "header_bgcolor":"#0078D7",
+      "menu_bgcolor":"#344058",
+      "menu_bgcolor_this":"#11578a",
+      "menu_border_color":"#FF5722"
+    },
+    {
+      "header_bgcolor":"#1aa094",
+      "menu_bgcolor":"#2f4056",
+      "menu_bgcolor_this":"#20645e",
+      "menu_border_color":"#FF5722"
+    },
+    {
+      "header_bgcolor":"#f03211",
+      "menu_bgcolor":"#1f1f1f",
+      "menu_bgcolor_this":"#9d2914",
+      "menu_border_color":"#009688"
+    },
+    {
+      "header_bgcolor":"#f0118c",
+      "menu_bgcolor":"#3f0a21",
+      "menu_bgcolor_this":"#9c125e",
+      "menu_border_color":"#009688"
+    }
+  ]
+}
