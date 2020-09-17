@@ -12,14 +12,10 @@
     <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
     <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
-    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <link rel='stylesheet' href='./lib/nprogress/nprogress.css' />
     <script type="text/javascript" src="./lib/layui/layui.js"></script>
     <script type="text/javascript" src="./lib/admin/admin.js"></script>
-
-    <!-- 请求进度条插件 -->
-    <script src='./lib/nprogress/nprogress.js'></script>
-    <link rel='stylesheet' href='./lib/nprogress/nprogress.css' />
+    
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
           <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
@@ -202,16 +198,19 @@
                         <a class="border active"><i class="fa fa-database fa-fw"></i><cite>数据表格</cite><i
                                 class="fa fa-angle-up fa-fw nav_right"></i></a>
                         <ul class="sub-menu" style="display: block;">
-                            <li class="sub-tab" hg-title="数据表格一" hg-nav="DataGrid.html">
+                            <li class="sub-tab" hg-title="数据表格" hg-nav="DataGrid.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基本数据表格</cite></a>
+                            </li>
+                            <li class="sub-tab" hg-title="数据表格一" hg-nav="DataGrid1.html">
                                 <a><i class="fa fa-file-text fa-fw"></i><cite>基本数据表格一</cite></a>
                             </li>
-                            <li class="sub-tab" hg-title="数据表格二" hg-nav="DataGrid1.html">
-                                <a><i class="fa fa-file-text fa-fw"></i><cite>基本数据表格二</cite></a>
+                            <li class="sub-tab" hg-title="数据表格二" hg-nav="DataGrid2.html">
+                                <a><i class="fa fa-file-text fa-fw"></i><cite>基础数据表格二</cite></a>
                             </li>
-                            <li class="sub-tab" hg-title="数据表格三" hg-nav="DataGrid2.html">
+                            <li class="sub-tab" hg-title="数据表格三" hg-nav="DataGrid3.html">
                                 <a><i class="fa fa-file-text fa-fw"></i><cite>基础数据表格三</cite></a>
                             </li>
-                            <li class="sub-tab" hg-title="数据表格四" hg-nav="DataGrid3.html">
+                            <li class="sub-tab" hg-title="数据表格四" hg-nav="DataGrid4.html">
                                 <a><i class="fa fa-file-text fa-fw"></i><cite>基础数据表格四</cite></a>
                             </li>
                         </ul>
@@ -340,6 +339,11 @@
         }
     </script>
 
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <!-- 请求进度条插件 -->
+    <script src='./lib/nprogress/nprogress.js'></script>
+    
 </body>
 
 </html>

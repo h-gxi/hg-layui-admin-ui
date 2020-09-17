@@ -10,6 +10,8 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="stylesheet" href="./css/font-awesome.min.css">
     <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/layui_ext/dtree/dtree.css" />
+    <link rel="stylesheet" href="./lib/layui_ext/dtree/font/dtreefont.css" />
     <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
     <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
     <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
@@ -21,257 +23,223 @@
           <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
     <style>
-        .demo-tree{border-width: 1px;border-style: solid;border-color: #e6e6e6;margin: 10px 0 0 0;}
+        .layui-tree-main {
+            cursor: pointer;
+            padding-right: 10px;
+            float: left;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #e6e6e6;
+            margin: 10px 0;
+        }
     </style>
 </head>
 
 <body class="layui-body-content">
     <div class="layui-fluid">
-        <div class="layui-row layui-col-space15">
-            <div class="layui-col-md3" lay-height='auto'>
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <i class="fa fa-file-text fa-fw"></i> 部门树
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-form">
+                    <div class="layui-form-item ">
+                        <div class="layui-inline"><i class="fa fa-file-text-o fa-fw"></i> 树形组件Dtree</div>
                     </div>
-                    <div class="layui-card-body">
-                        <div class="">
-                            <button class="layui-btn layui-btn-sm layui-btn-normal"
-                                onclick="hg.open('添加部门','./DataGrid-add.html',600,400)"><i
-                                    class="layui-icon">&#xe654;</i>添加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-warm" onclick="getTreeChecked()"><i
-                                    class="layui-icon">&#xe642;</i>修改</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="getTreeChecked()"><i
-                                    class="layui-icon">&#xe640;</i>删除</button>
+                    <div class="layui-form-item layui-layout-left">
+                        <div class="layui-inline">
+                            <input class="layui-input layui-input-sm" style="width: 300px;" type="text" name="search"
+                                placeholder="快速查找" autocomplete="off">
+                            <input id="dept" type="hidden" name="dept" value="0" />
                         </div>
-                        <div class="demo-tree">
-                            <div id="treeid" class="demo-tree-box"></div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="querysubmit">
+                                <i class="layui-icon layui-icon-sm">&#xe615;</i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md9">
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <i class="fa fa-file-text fa-fw"></i> 基本数据表格四
-                        <span class="layui-layout-right">
-                            <a href="javascript:;" hg-event="fullscreen">
-                                <i class="layui-icon layui-icon-screen-full"></i>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="layui-card-body">
-                        <div class="">
-                            <button class="layui-btn layui-btn-sm layui-btn-normal"
-                                onclick="hg.open('添加用户','./DataGrid-add.html',600,400)"><i
-                                    class="layui-icon">&#xe654;</i>添加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-warm" onclick="edit()"><i
-                                    class="layui-icon">&#xe642;</i>修改</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="del()"><i
-                                    class="layui-icon">&#xe640;</i>删除</button>
-                        </div>
-                        <table class="layui-hide" id="test" lay-filter="test"></table>
+            <div class="layui-card-body layui-tree">
+                <div class="layui-tree-main">
+                    <div class="demo-tree">
+                        <ul id="deptTree" class="dtree" data-id="0"></ul>
                     </div>
                 </div>
+                <div style="margin-left: 225px;">
+                    <table class="layui-hide" id="test" lay-filter="test"></table>
+                </div>
+
             </div>
         </div>
     </div>
 </body>
 <script>
-    //修改删除树节点
-    function getTreeChecked(e){
-        var checkData = tree.getChecked();
-        if(checkData){
-            hg.msg(JSON.stringify(checkData));
-        }
-        else{
-            hg.msg('请选中一个节点，再操作！');
-        }
-    }
-
-    //修改
-    function edit(obj) {
-        //obj通过行tool修改-lay-event
-        var row = obj ? obj : table.getSelected(); //hg.table.datatable('test', 'getSelected');
-        console.log(row);
-        if (row) {
-            hg.open('修改用户' + row.data.username, './DataGrid-add.html', 600, 400);
-        } else {
-            hg.msg('请选中一行数据，再操作！');
-        }
-    }
-    //删除
-    function del(obj) {
-        //obj通过行tool删除-lay-event
-        var row = obj ? obj : table.getSelected(); //hg.table.datatable('test', 'getSelected');
-        if (row) {
-            hg.confirm("删除当前选中的用户，确定要删除吗？", function () {
-                //row.del(); //只删本地数据
-                hg.msg('删除成功！');
-                table && table.reload(); //hg.table.datatable('test', 'reload');
-            });
-        } else {
-            hg.msg('请选中一行数据，再操作！');
-        }
-    }
-    //查看部门
-    function depts(obj, field) {
-        console.log(field); //点击的单元格
-        hg.msg(JSON.stringify(obj.data));
-    }
-    //监听switch操作事件
-    hg.form.onswitch('doflag',function(data){
-        hg.msg(data.elem.name+'开关checked：'+(data.elem.checked===true?'开启':'禁用'));
-        console.log(data.elem.checked);
-        console.log(data.elem.name);
-        console.log(data.elem.value);
-        console.log(data.othis);
-    });
-    //日期控件
-    hg.datetime('#start', '#end', {
-        type: 'datetime',
-        value: hg.getdate('datetime', -30),
-        value2: hg.getdate('datetime', '23:59:59'),
-        min: hg.getdate('date', -365),
-        max: hg.getdate(),
-    });
-    var tableCols = [[
-        { field: 'id', width: 80, title: 'ID', sort: true }, 
-        { field: 'username', width: 80, title: '用户名', style: 'color: #ff5722;' }, 
-        { field: 'sex', width: 80, title: '性别', sort: true }, 
-        { field: 'city', width: 80, title: '城市', hide: true }, 
-        { field: 'sign', title: '签名', width: '30%', minWidth: 100 }, 
-        { 
-            field: 'experience', title: '积分', sort: true, totalRow: true, templet: function (d) {
-                if (d.experience > 500) {
-                    return '<span style="color: #F581B1;">' + d.experience + '</span>';
-                }
-                return d.experience;
-            }
-        }, 
-        { field: 'score', title: '评分', sort: true },
-        { field: 'classify', title: '职业' }, 
-        { 
-            field: 'wealth', width: 80, title: '部门', templet: function (d) {
-                return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="depts">查看</a>'
-            }
-        }, 
-        {
-            field: 'flag', width: 100, title: '是否禁用', templet: function (d) {
-                var checked = d.flag == 0 ? 'checked' : '';
-                return '<input type="checkbox" name ="' + d.id + '" value= ' + d.flag +
-                    ' lay-skin="switch" lay-text="开启|禁用" lay-filter="doflag" ' + checked + '>'
-            }
-        }, 
-        {
-            field: 'right', width: 120, title: '操作', templet: function (d) {
-                return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>'
-            }
-        }]
-    ];
-    //基本数据表格
-   var table = hg.table.datatable('test', '用户管理', 'data1.json', {}, tableCols, '', false, 'full-130');
-
-   var data = [{
-        id: 'hg-100',
-        field: '1',
-        level: '1',
-        title: '父节点100',
-        spread: true,
-        children: [{
-            id: 'hg-100101',
-            field: '3',
-            level: '2',
-            title: '子节点100101',
-            children: [{
-                id: 'hg-100101101',
-                field: '4',
-                level: '3',
-                title: '子节点100101101'
+    //树形列表初始化
+    layui.config({
+        base: '../lib/layui_ext/'
+    }).extend({
+        dtree: 'dtree/dtree'
+    }).use(['dtree'], function () {
+        var dtree = layui.dtree;
+        // 初始化树
+        var treeDept = dtree.render({
+            elem: "#deptTree",
+            width: "200",
+            height: "full-100",
+            dataFormat: "list", //list数据id-pid关联模式，不设置为children模式
+            method: "Get",
+            url: "/Depart/GetTreeList",
+            selectTips: "请选择末级部门",
+            initLevel: 3, //默认展开层次
+            load: false, //加载数据时是否显示遮罩
+            menubar: true, //下拉框中开启菜单栏
+            checkbar: false,
+            response: {
+                treeId: "id", //绑定数据中ID字段名
+                parentId: "gradeId", //绑定数据中父ID字段名
+                title: "departName", //绑定数据中显示字段名
+            },
+            data: [{
+                "id": 1,
+                "departName": "2020\u7EA7",
+                "gradeId": 0
             }, {
-                id: 'hg-100101102',
-                field: '5',
-                level: '3',
-                title: '子节点100101102'
+                "id": 2,
+                "departName": ".net core \u57FA\u7840\u73ED",
+                "gradeId": 1
             }, {
-                id: 'hg-100101103',
-                field: '6',
-                level: '3',
-                title: '子节点100101103'
+                "id": 3,
+                "departName": ".net core \u7CBE\u82F1\u73ED",
+                "gradeId": 1
+            }, {
+                "id": 4,
+                "departName": "java EE \u57FA\u7840\u73ED",
+                "gradeId": 1
             }]
-        }]
-    }, {
-        id: 'hg-200',
-        field: '2',
-        level: '1',
-        title: '父节点200',
-        lazy: true
-    }];
-    //treeid
-    var tree = hg.tree.datatree('treeid', data, false);
-    tree.onspread = function() {
-        var obj = this; 
-        //模拟post后台数据，延迟2秒
-        setTimeout(function(){
-            var data = getTreeJson(obj.data.id); //异步获取数据
-            obj.lazytree(data);
-        },2000);
-        // setTimeout(() => {
-        //     var data = getTreeJson(obj.data.id); //异步获取数据
-        //     obj.lazytree(data);
-        // }, 2000);
-    }
-    tree.onclick = function() {
-        var obj = this; 
-        console.log(obj.data); //得到当前点击的节点数据
-        console.log(obj.state); //得到当前节点的展开状态：open、close、normal
-        console.log(obj.elem); //得到当前节点元素
-        console.log(obj.data.children); //当前节点下是否有子节点
-    }
-    tree.oncheck = function() {
-        var obj = this; 
-        console.log(obj.data); //得到当前点击的节点数据
-        console.log(obj.checked); //得到当前节点的展开状态：open、close、normal
-        console.log(obj.elem); //得到当前节点元素
-    }
+        });
+        dtree.on("node('deptTree')", function (obj) {
+            var aa = $('button[lay-filter="querysubmit"]');
+            if (obj.param.leaf) {
+                $("#dept").val(obj.param.nodeId);
+                aa.click();
+            } else {
+                $("#dept").val(obj.param.nodeId);
+                aa.click();
+            }
+        });
+    });
 
-    // 模拟后台返回数据
-    function getTreeJson(id) {
-        if (id === 'hg-200') {
-            return [{
-                id: 'hg-200101',
-                level: '2',
-                title: '子节点200101'
+    //监听表单提交事件
+    hg.form.onsubmit('querysubmit', function (data) {
+        hg.msghide("重新加载数据..");
+        table && table.reload(data);
+    });
+    var tableCols = [
+        [{
+                type: 'checkbox'
+            },
+            {
+                field: 'id',
+                width: 80,
+                title: '编号',
+                sort: true
+                //}, {
+                //    field: 'photos',
+                //    title: '学生照片',
+                //    width: 100,
+                //    align: 'center',
+                //    templet: function (d) {
+                //        return '<img src="' + d.photos + '" />';
+                //    }
             }, {
-                id: 'hg-200102',
-                level: '2',
-                title: '子节点200102',
-                lazy: true
-            }];
-        }
-        if (id === 'hg-200102') {
-            return [{
-                id: 'hg-200102101',
-                level: '3',
-                title: '子节点200102101'
+                field: 'name',
+                width: 100,
+                title: '学生姓名',
+                sort: true
             }, {
-                id: 'hg-200102102',
-                level: '3',
-                title: '子节点200102102',
-                lazy: true
-            }];
-        }
-        if (id === 'hg-200102102') {
-            return [{
-                id: 'hg-200102102101',
-                level: '4',
-                title: '子节点200102102101'
+                field: 'genderName',
+                title: '性别',
+                width: 80,
+                sort: true
             }, {
-                id: 'hg-200102102102',
-                level: '4',
-                title: '子节点200102102102',
-            }];
+                field: 'nationName',
+                title: '民族',
+                width: 80,
+                sort: true
+            }, {
+                field: 'enrollmentDT',
+                title: '入学时间',
+                width: 100,
+                sort: true,
+                templet: function (d) {
+                    return layui.util.toDateString(d.enrollmentDT, "yyyy-MM-dd");
+                }
+            }, {
+                field: 'address',
+                title: '学生地址',
+                minWidth: 200,
+                sort: true
+            }, {
+                field: 'statusName',
+                title: '激活状态',
+                width: 100,
+                sort: true
+            }, {
+                field: 'right',
+                width: 160,
+                title: '操作',
+                fixed: 'right',
+                templet: function (d) {
+                    return '<a class="layui-btn layui-btn-xs" lay-event="details">详情</a> <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a> <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>'
+                }
+            }
+        ]
+    ];
+    var toolbar = [{
+        text: '删除',
+        layuiicon: '&#xe640;',
+        class: 'layui-btn-danger',
+        handler: function (obj, row) {
+            if (obj.checkstatus && obj.checkstatus.data.length > 0) {
+                hg.confirm("批量删除所有选中的数据，确定要删除吗？", function () {
+                    //console.log(obj.checkstatus.data.map(function (x) { return x.id }).join(','))
+                    $.ajax({
+                        url: '/StudentInfo/DeleteAll',
+                        data: {
+                            arr: obj.checkstatus.data.map(function (x) {
+                                return x.id
+                            })
+                        },
+                        type: 'POST',
+                        success: function (data) {
+                            if (data.success) {
+                                hg.msg('批量删除成功！');
+                                //重载表格数据
+                                //hg.table.datatable('test', 'reload');
+                                table && table.reload();
+                            } else {
+                                hg.msg(data.msg);
+                            }
+                        },
+                        error: function () {
+                            hg.msg("网络请求失败！");
+                        }
+                    });
+
+                });
+            } else {
+                hg.msg('请选中一个或多个复选框，再操作！');
+            }
         }
-    }
+    }, {
+        text: '添加',
+        layuiicon: '&#xe608;',
+        class: 'layui-btn-normal',
+        handler: function () {
+            hg.open('添加学生', '/StudentInfo/Create', 780, 580);
+        }
+    }];
+    var data = [{"id":10002,"name":"\u8001\u674E","gender":0,"nation":0,"enrollmentDT":"2020-04-23T00:00:00","departId":3,"phone":"13902451189","email":"laoli@stu.com","identityCard":"230210199802127323","address":"\u5317\u4EAC\u5E02\u671D\u9633\u533A\u4E1C\u4E09\u73AF\u4E2D\u8DEF\u753210\u53F7","photos":"http://127.0.0.1:5000\\Upload\\StudentPhotos\\stu_2.jpg","photosFile":null,"status":0,"createdTime":"2020-06-30 13:35:01.1772292","modifiedTime":"2020-06-30 13:35:01.1772298","operatorName":null,"genderName":"\u7537","nationName":"\u6C49\u65CF","statusName":"\u672A\u6FC0\u6D3B","departName":".net core \u7CBE\u82F1\u73ED"},{"id":10001,"name":"\u5C0F\u5B89","gender":1,"nation":1,"enrollmentDT":"2020-04-23T00:00:00","departId":4,"phone":"13902451188","email":"xiaoan@stu.com","identityCard":"230210199708162251","address":"\u671D\u9633\u533A\u671D\u9633\u516C\u56ED\u897F\u8DEF9\u53F7\u9662\u4E5D\u53F7","photos":"http://127.0.0.1:5000\\Upload\\StudentPhotos\\stu_1.jpg","photosFile":null,"status":0,"createdTime":"2020-06-30 13:35:01.1743803","modifiedTime":"2020-06-30 13:35:01.1743809","operatorName":null,"genderName":"\u5973","nationName":"\u8499\u53E4\u65CF","statusName":"\u672A\u6FC0\u6D3B","departName":"java EE \u57FA\u7840\u73ED"}];
+    //基本数据表格
+    var table = hg.table.datatable('test', '用户管理', data, {}, tableCols, toolbar, true, 'full-100', ['filter','print', 'exports']);
 </script>
 
 </html>

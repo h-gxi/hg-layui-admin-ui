@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="hg-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./lib/layui_ext/dtree/dtree.css" />
+    <link rel="stylesheet" href="./lib/layui_ext/dtree/font/dtreefont.css" />
+    <link rel="stylesheet" href="./lib/admin/admin.css" media="all">
+    <link rel="stylesheet" href="./lib/Scrollbar/jquery.scrollbar.css">
+    <script type="text/javascript" src="./lib/admin/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="./lib/Scrollbar/jquery.scrollBar.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script type="text/javascript" src="./lib/admin/admin.js"></script>
+    <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+
+<body class="layui-body-content">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-form">
+                    <div class="layui-form-item ">
+                        <div class="layui-inline"><i class="fa fa-file-text-o fa-fw"></i> 部门管理</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <button type="button" id="btnAdd" class="layui-btn layui-btn-normal layui-btn-sm"><i
+                                    class="layui-icon">&#xe654;</i>添加部门</button>
+                        </div>
+                        <div class="layui-inline" style="margin-left:10px;">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm refresh"><i
+                                        class="layui-icon">&#xe669;</i>刷新</button>
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm open-all"><i
+                                        class="layui-icon">&#xe61a;</i>展开</button>
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm close-all"><i
+                                        class="layui-icon">&#xe602;</i>折叠</button>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="margin-right:0px;">
+                            <input type="text" class="layui-input" id="edtSearch" value="" placeholder="输入关键字"
+                                style="display: inline-block;width: 140px;height: 30px;line-height: 30px;margin-left:20px;" />
+                        </div>
+                        <div class="layui-inline" style="margin-left:0px;">
+                            <div class="layui-btn-group">
+                                <button id="btnSearch" class="layui-btn layui-btn-sm layui-btn-normal">
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                                <button id="btnClearSearch" class="layui-btn layui-btn-sm layui-btn-primary">
+                                    <i class="layui-icon">&#x1006;</i>清除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="layui-hide" id="test" lay-filter="test"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var treeTable;
+    layui.config({
+        base: '../lib/layui_ext/'
+    }).extend({
+        treeTable: 'treetable/treeTable'
+    }).use(['treeTable'], function () {
+        treeTable = layui.treeTable;
+
+        treeTable.on('tool(test)', function (obj) {
+            if (obj.event == 'add') {
+                hg.open('添加部门', '/Depart/Create/' + obj.data.id, 580, 260);
+            }
+            if (obj.event == 'edit') {
+                hg.open('编辑部门', '/Depart/Edit/' + obj.data.id, 580, 300);
+            }
+            if (obj.event == 'del') {
+                hg.confirm('确定删除[' + obj.data.departName + ']吗?', function () {
+                    $.ajax({
+                        url: '/Depart/Delete',
+                        data: {
+                            id: obj.data.id
+                        },
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.success) {
+                                hg.msghide("删除成功！");
+                                //本地移除数据
+                                layui.each(data, function (i, d) {
+                                    if (d.id == obj.data.id) {
+                                        data.splice(i, 1);
+                                        return false;
+                                    }
+                                });
+                                init(data);
+                            } else {
+                                hg.msg(result.msg);
+                            }
+                        },
+                        error: function () {
+                            hg.msg("网络请求失败！");
+                        }
+                    });
+
+                });
+            }
+        });
+    });
+
+    var data = [];
+    $(document).ready(function () {
+        request();
+    });
+
+    function request() {
+        // hg.request('/Depart/GetQueryList', function (result) {
+        //     data = result.data;
+        //     init(data);
+        // });
+        
+        //模拟获取后台数据
+        setTimeout(function(){
+            var result = {"code":0,"msg":null,"count":4,"data":[{"id":1,"departName":"2020\u7EA7","deptType":0,"gradeId":null,"deptTypeName":"\u5E74\u7EC4","gradeName":null},{"id":2,"departName":".net core \u57FA\u7840\u73ED","deptType":1,"gradeId":1,"deptTypeName":"\u73ED\u7EA7","gradeName":"2020\u7EA7"},{"id":3,"departName":".net core \u7CBE\u82F1\u73ED","deptType":1,"gradeId":1,"deptTypeName":"\u73ED\u7EA7","gradeName":"2020\u7EA7"},{"id":4,"departName":"java EE \u57FA\u7840\u73ED","deptType":1,"gradeId":1,"deptTypeName":"\u73ED\u7EA7","gradeName":"2020\u7EA7"}]};
+            data = result.data;
+            init(data);
+        }, 500); 
+    }
+    var insTb;
+
+    function init(data) {
+        insTb = treeTable.render({
+            elem: '#test',
+            height: 'full-180',
+            text: {
+                none: '<div style="padding: 18px 0;">暂无数据</div>'
+            },
+            data: data,
+            tree: {
+                iconIndex: 0,
+                isPidData: true,
+                idName: 'id',
+                pidName: 'gradeId',
+                arrowType: 'arrow2',
+                getIcon: function (item) {
+                    if (item.children != null && item.children.length > 0) {
+                        return '<i class="ew-tree-icon ew-tree-icon-folder"></i>';
+                    } else {
+                        return '<i class="ew-tree-icon ew-tree-icon-file"></i>';
+                    }
+                }
+            },
+            cols: [{
+                    field: 'id',
+                    title: '部门编号',
+                    width: 400
+                },
+                {
+                    field: 'departName',
+                    title: '部门名称',
+                    width: 200
+                },
+                {
+                    field: 'deptTypeName',
+                    title: '部门类别',
+                    width: 120
+                },
+                {
+                    align: 'center',
+                    title: '操作',
+                    templet: function (item) {
+                        var btns = '';
+                        if (item.deptType == 0) {
+                            btns = btns +
+                                '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">添加</a>';
+                        } else {
+                            btns = btns +
+                                '<a class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="add">添加</a>';
+                        }
+                        btns = btns + '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
+
+                        if (item.children != null && item.children.length > 0) {
+                            btns = btns +
+                                '<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled">删除</button>';
+                        } else {
+
+                            btns = btns +
+                                '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                        }
+                        return btns;
+                    }
+                }
+            ],
+            style: 'margin-top:0;',
+            done: function () {}
+        });
+        insTb.expandAll();
+    }
+
+    // 全部展开
+    $('.open-all').click(function () {
+        insTb.expandAll();
+    });
+
+    // 全部折叠
+    $('.close-all').click(function () {
+        insTb.foldAll();
+    });
+
+    //刷新
+    $('.refresh').click(function () {
+        request();
+    });
+
+    //搜索
+    $('#btnSearch').click(function () {
+        var keywords = $('#edtSearch').val();
+        if (keywords) {
+            insTb.filterData(keywords);
+        } else {
+            insTb.clearFilter();
+        }
+    });
+    //清除
+    $('#btnClearSearch').click(function () {
+        $('#edtSearch').val("");
+        insTb.clearFilter();
+    });
+
+    $('#btnAdd').click(function () {
+        hg.open('添加部门', '/Depart/Create/0', 580, 260);
+    });
+
+    //通过table定义reload刷新列表,update本地填充一条数据
+    var TABLE = function () {
+        return {
+            reload: function () {
+                request();
+            },
+            update: function (d) {
+                var model = $.parseJSON(d);
+                var up = false;
+                layui.each(data, function (i, d) {
+                    if (d.id == model.id) {
+                        data[i] = model;
+                        up = true;
+                        return false;
+                    }
+                });
+                up || data.push(model);
+                init(data);
+            }
+        }
+    }
+    var table = new TABLE();
+</script>
+
+</html>
